@@ -1,0 +1,70 @@
+[window]
+# Adds breathing room around your text
+padding = { x = 12, y = 12 }
+
+# Makes the padding scale cleanly if you resize the window
+dynamic_padding = true
+
+# The glass effect (0.0 is invisible, 1.0 is solid). 
+# Note: Niri must support this, and you might need a compositor setting, 
+# but Alacritty handles it natively here.
+opacity = 0.85
+
+# Niri draws your borders, so tell Alacritty not to draw its own title bar
+decorations = "None"
+
+[font]
+# Make sure the font name exactly matches what is installed on your system
+# normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+# bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+# italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+# bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+
+# Adjust to your monitor's scaling
+# size = 12.0
+
+[font.offset]
+# Sometimes fonts feel too vertically squished. This adds slight line spacing.
+# y = 1
+
+
+[colors.primary]
+background = "#2d353b"
+foreground = "#d3c6aa"
+dim_foreground = "#9da9a0"
+bright_foreground = "#d3c6aa"
+
+[colors.cursor]
+text = "#2d353b"
+cursor = "#d3c6aa"
+
+[colors.normal]
+black   = "#475258"
+red     = "#e67e80"
+green   = "#a7c080"
+yellow  = "#dbbc7f"
+blue    = "#7fbbb3"
+magenta = "#d699b6"
+cyan    = "#83c092"
+white   = "#d3c6aa"
+
+[colors.bright]
+black   = "#475258"
+red     = "#e67e80"
+green   = "#a7c080"
+yellow  = "#dbbc7f"
+blue    = "#7fbbb3"
+magenta = "#d699b6"
+cyan    = "#83c092"
+white   = "#d3c6aa"
+
+[colors.dim]
+black   = "#232a2e"
+red     = "#e67e80"
+green   = "#a7c080"
+yellow  = "#dbbc7f"
+blue    = "#7fbbb3"
+magenta = "#d699b6"
+cyan    = "#83c092"
+white   = "#9da9a0"
+
