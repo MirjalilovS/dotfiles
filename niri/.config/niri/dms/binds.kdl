@@ -1,0 +1,4 @@
+binds {
+    Super+Alt+L hotkey-overlay-title="Lock Screen" { spawn "dms" "ipc" "call" "lock" "lock"; }
+    Super+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
+}
