@@ -130,6 +130,16 @@
       "id": "darkMode",
       "enabled": true,
       "width": 50
+    },
+    {
+      "id": "doNotDisturb",
+      "enabled": true,
+      "width": 50
+    },
+    {
+      "id": "builtin_cups",
+      "enabled": true,
+      "width": 50
     }
   ],
   "showWorkspaceIndex": false,
@@ -232,7 +242,7 @@
   "launcherLogoContrast": 1,
   "launcherLogoSizeOffset": 0,
   "fontFamily": "Inter Variable",
-  "monoFontFamily": "Fira Code",
+  "monoFontFamily": "FiraCode Nerd Font",
   "fontWeight": 400,
   "fontScale": 1,
   "notepadUseMonospace": true,
