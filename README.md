@@ -14,3 +14,5 @@ To complete the environment, install the following (instructions will be added l
 - IntelliJ using JetBrainsToolbox
 - LazyGit
 - LazyDocker
+- eza
+- zoxide
