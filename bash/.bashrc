@@ -25,3 +25,15 @@ fi
 unset rc
 eval "$(mise activate bash)"
 export PATH="$HOME/go/bin:$PATH"
+
+# ==========================
+# Eza (Better ls) Aliases
+# ==========================
+# --icons=always : Shows file/folder icons (Requires a Nerd Font)
+# --group-directories-first : Puts folders at the top, files at the bottom
+# --git : Shows git status (modified, added, etc) next to files
+
+alias ls="eza --icons=always --group-directories-first"
+alias ll="eza -lh --icons=always --group-directories-first --git"
+alias la="eza -lah --icons=always --group-directories-first --git"
+alias lt="eza --tree --level=2 --icons=always --group-directories-first"
