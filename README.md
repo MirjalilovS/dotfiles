@@ -1,18 +1,212 @@
-Initial Dotfiles for Fedora 44:
+# Dotfiles — Fedora 44 + Niri + DankMaterialShell
 
-Install the following before installing dotfiles:
+My personal dotfiles, managed with [GNU Stow](https://www.gnu.org/software/stow/). This README walks you
+from a **fresh Fedora Workstation install** to my current desktop setup, step by step.
 
-- Git
-- GNU Stow
-- Mise
-- Niri
-- DankMaterialShell
-- Nvim
+## What you get
 
-To complete the environment, install the following (instructions will be added later):
+| Layer            | Choice                                                                 |
+| ---------------- | ---------------------------------------------------------------------- |
+| Compositor / WM  | [Niri](https://github.com/YaLTeR/niri) — scrollable-tiling Wayland     |
+| Desktop shell    | [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) (bar, launcher, lock, notifications) |
+| Terminal         | [Alacritty](https://github.com/alacritty/alacritty)                    |
+| App launcher     | [fuzzel](https://codeberg.org/dnkl/fuzzel) + DMS spotlight             |
+| Editor           | [Neovim](https://neovim.io/) on [LazyVim](https://www.lazyvim.org/)    |
+| Shell            | Bash with a custom Everforest git prompt                               |
+| Runtime manager  | [mise](https://mise.jdx.dev/) (Go, Java 21)                            |
+| CLI upgrades      | eza, zoxide, lazygit, lazydocker                                       |
+| Theme            | **Everforest** everywhere (matugen-driven in DMS/Niri/Neovim)          |
+| Font             | JetBrainsMono Nerd Font                                                |
 
-- IntelliJ using JetBrainsToolbox
-- LazyGit
-- LazyDocker
-- eza
-- zoxide
+The repo is a Stow package tree — each top-level directory mirrors `$HOME`:
+
+```
+dotfiles/
+├── bash/                 → ~/.bashrc
+├── alacritty/            → ~/.config/alacritty/
+├── niri/                 → ~/.config/niri/
+├── dankmaterialshell/    → ~/.config/DankMaterialShell/
+├── nvim/                 → ~/.config/nvim/
+└── mise/                 → ~/.config/mise/
+```
+
+---
+
+## Step 0 — Update the base system
+
+```bash
+sudo dnf upgrade --refresh -y
+sudo dnf install -y git stow curl
+```
+
+`git` and `stow` are the only hard prerequisites for the dotfiles themselves; everything else below installs
+the programs those dotfiles configure.
+
+## Step 1 — Core desktop packages
+
+Niri, Alacritty and the helpers referenced by the Niri key binds all live in the standard Fedora repos:
+
+```bash
+sudo dnf install -y \
+  niri \
+  alacritty \
+  fuzzel \
+  swaylock \
+  neovim \
+  brightnessctl \
+  playerctl \
+  wireplumber \
+  xdg-desktop-portal-gnome
+```
+
+- `brightnessctl` / `playerctl` / `wireplumber` back the `XF86*` media & brightness binds in the Niri config.
+- `swaylock` is the fallback screen locker (DMS also provides its own lock).
+- A portal (`xdg-desktop-portal-gnome` works well) is needed for screen sharing and file pickers under Niri.
+
+> If `niri` isn't found on your Fedora release, enable it via COPR (`sudo dnf copr enable yalter/niri`) and retry.
+
+## Step 2 — JetBrainsMono Nerd Font
+
+Alacritty and the shell prompt expect a Nerd Font for icons/glyphs:
+
+```bash
+mkdir -p ~/.local/share/fonts
+cd /tmp
+curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+unzip -o JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMono
+fc-cache -f
+```
+
+The font family lines in `alacritty/.config/alacritty/alacritty.toml` are commented out (it inherits the
+system default). Uncomment the `[font]` block there if you want it pinned to `JetBrainsMono Nerd Font`.
+
+## Step 3 — mise + language runtimes
+
+[mise](https://mise.jdx.dev/) manages Go and Java. `~/.bashrc` already runs `eval "$(mise activate bash)"`,
+so once mise is on `PATH` the tools activate automatically.
+
+```bash
+curl https://mise.run | sh
+```
+
+The runtime versions are declared in `mise/.config/mise/config.toml`:
+
+```toml
+[tools]
+go = "latest"
+java = "21"
+```
+
+After the dotfiles are stowed (Step 6), run `mise install` to fetch them.
+
+## Step 4 — Extra CLI tools
+
+```bash
+# eza (modern ls) and zoxide (smart cd) — in Fedora repos
+sudo dnf install -y eza zoxide
+
+# lazygit / lazydocker — via COPR
+sudo dnf copr enable atim/lazygit -y && sudo dnf install -y lazygit
+sudo dnf copr enable atim/lazydocker -y && sudo dnf install -y lazydocker
+```
+
+`~/.bashrc` defines `ls`/`ll`/`la`/`lt` aliases on top of `eza` (icons, git status, dirs-first).
+
+## Step 5 — DankMaterialShell (DMS)
+
+DMS is the bar/launcher/notification shell that sits on top of Niri. It's built on
+[Quickshell](https://quickshell.outfoxxed.me/); follow the upstream install guide for the current method:
+
+- Repo & docs: <https://github.com/AvengeMedia/DankMaterialShell>
+
+Install Quickshell + the `dms` CLI as documented there, then verify:
+
+```bash
+dms --version
+```
+
+The Niri config wires DMS in through several key binds and includes (spotlight on `Mod+Space`, lock on
+`Super+Alt+L`, brightness keys, etc.), and `niri/.config/niri/config.kdl` pulls in DMS-managed fragments
+from `niri/.config/niri/dms/`. Those `dms/*.kdl` files are **auto-generated by DMS** — don't hand-edit them.
+
+## Step 6 — Clone and stow the dotfiles
+
+```bash
+git clone git@github.com:MirjalilovS/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+
+# Symlink every package into place
+stow bash alacritty niri dankmaterialshell nvim mise
+```
+
+Stow creates symlinks from `~/.config/...` (and `~/.bashrc`) back into this repo. If a target already exists
+(e.g. Fedora ships a default `~/.bashrc`), Stow will refuse and report a conflict — move/delete the offending
+file first, then re-run:
+
+```bash
+mv ~/.bashrc ~/.bashrc.orig    # example: clear a conflicting default
+stow bash
+```
+
+You can also stow packages individually (`stow niri`) or remove one with `stow -D niri`.
+
+Then pull the mise runtimes now that the config is linked:
+
+```bash
+mise install
+```
+
+## Step 7 — Neovim first launch
+
+The Neovim config is a LazyVim setup with a custom Everforest/matugen colorscheme
+(`nvim/.config/nvim/lua/plugins/dankcolors.lua`) that live-reloads when the theme file changes. On first
+launch, LazyVim bootstraps itself and installs every plugin/extra listed in `lazyvim.json` (Go, Java, Docker,
+Terraform, Python, TS, YAML, etc.):
+
+```bash
+nvim
+```
+
+Let it finish syncing, then quit and reopen. Run `:checkhealth` to spot missing external tools (ripgrep, fd,
+a C compiler, node) and install any it flags.
+
+## Step 8 — Log in to Niri
+
+Log out, and at the display manager pick the **Niri** session, then log back in. `Mod` is the **Super**
+(Windows) key.
+
+Handy first binds to know:
+
+| Bind              | Action                          |
+| ----------------- | ------------------------------- |
+| `Mod+T`           | Open Alacritty                  |
+| `Super+Return`    | Open Alacritty (DMS bind)       |
+| `Mod+D`           | fuzzel launcher                 |
+| `Mod+Space`       | DMS spotlight                   |
+| `Mod+W`           | Close window                    |
+| `Mod+H/J/K/L`     | Focus left/down/up/right        |
+| `Mod+R`           | Cycle preset column widths      |
+| `Mod+F`           | Maximize column                 |
+| `Mod+O`           | Overview                        |
+| `Super+Alt+L`     | Lock screen                     |
+| `Mod+Shift+E`     | Quit Niri                       |
+| `Print`           | Screenshot                      |
+
+Full binds live in `niri/.config/niri/config.kdl` (and the DMS overrides in `dms/binds.kdl`).
+
+---
+
+## Still to automate (manual for now)
+
+- **IntelliJ IDEA** via [JetBrains Toolbox](https://www.jetbrains.com/toolbox-app/)
+
+## Notes
+
+- The theme is **Everforest** across the board; DMS drives colors via matugen and regenerates the
+  `niri/.config/niri/dms/colors.kdl` and the Neovim `dankcolors.lua` palette. Editing colors is best done
+  through DMS's settings rather than by hand.
+- Backup files in the repo (`*.bak`, `config.kdl.backup*`, `config.kdl.dmsbackup*`) are historical snapshots
+  and can be ignored.
+- Everything here targets **Fedora 44 Workstation** on Wayland.
+</content>
+</invoke>
