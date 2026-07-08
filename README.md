@@ -180,10 +180,8 @@ Handy first binds to know:
 
 | Bind              | Action                          |
 | ----------------- | ------------------------------- |
-| `Mod+T`           | Open Alacritty                  |
-| `Super+Return`    | Open Alacritty (DMS bind)       |
-| `Mod+D`           | fuzzel launcher                 |
-| `Mod+Space`       | DMS spotlight                   |
+| `Mod+T`           | Open Alacritty (Terminal)       |
+| `Mod+Space`       | DMS spotlight (App Launcher)    |
 | `Mod+W`           | Close window                    |
 | `Mod+H/J/K/L`     | Focus left/down/up/right        |
 | `Mod+R`           | Cycle preset column widths      |
