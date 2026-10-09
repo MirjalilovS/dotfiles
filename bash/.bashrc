@@ -55,3 +55,13 @@ alias ls="eza --icons=always --group-directories-first"
 alias ll="eza -lh --icons=always --group-directories-first --git"
 alias la="eza -lah --icons=always --group-directories-first --git"
 alias lt="eza --tree --level=2 --icons=always --group-directories-first"
+source ~/moneff.profile
+
+complete -C /home/mirjalilovs/.local/share/mise/installs/terraform/1.15.7/terraform terraform
+
+alias ansible-mnf='docker compose -f docker-compose-run-ansible.yml run --rm ansible'
+
+ansible-mnf-nebula() {
+  local extra_host='-eansible_host={{ labels.nebula_ip }}'
+  ansible-mnf "$@" $extra_host
+}

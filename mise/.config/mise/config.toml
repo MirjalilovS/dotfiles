@@ -1,3 +1,8 @@
 [tools]
+ansible = { version = "latest", pipx_args = "--include-deps", uvx = false }
 go = "latest"
 java = "21"
+packer = "latest"
+pipx = "latest"
+terraform = "latest"
+terragrunt = "0.89.4"
