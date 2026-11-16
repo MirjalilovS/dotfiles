@@ -59,9 +59,14 @@ source ~/moneff.profile
 
 complete -C /home/mirjalilovs/.local/share/mise/installs/terraform/1.15.7/terraform terraform
 
-alias ansible-mnf='docker compose -f docker-compose-run-ansible.yml run --rm ansible'
+# alias ansible-mnf='docker compose -f docker-compose-run-ansible.yml run --rm ansible'
 
-ansible-mnf-nebula() {
-  local extra_host='-eansible_host={{ labels.nebula_ip }}'
-  ansible-mnf "$@" $extra_host
-}
+# ansible-mnf-nebula() {
+#  local extra_host='-eansible_host={{ labels.nebula_ip }}'
+#  ansible-mnf "$@" $extra_host
+#}
+
+# >>> moneff apply-wrapper >>>
+# pre-apply gate + apply registry (see docs/devops/apply-registry.md)
+source "/home/mirjalilovs/IdeaProjects/Moneff/moneff-devops/utils/apply-wrapper.sh"
+# <<< moneff apply-wrapper <<<
